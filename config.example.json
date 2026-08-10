@@ -1,0 +1,8 @@
+{
+  "subreddits": ["marketing", "smallbusiness"],
+  "keywords": ["not converting", "struggling", "confused"],
+  "limit_per_subreddit": 50,
+  "output": "csv",
+  "csv_path": "output/reddit_matches.csv"
+}
+
