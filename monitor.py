@@ -36,8 +36,16 @@ def load_config(path: Path) -> dict:
     missing = required.difference(config)
     if missing:
         raise ValueError(f"Missing configuration keys: {', '.join(sorted(missing))}")
+    if not isinstance(config["subreddits"], list) or not isinstance(config["keywords"], list):
+        raise ValueError("Subreddits and keywords must be lists")
+    config["subreddits"] = [str(item).strip().removeprefix("r/") for item in config["subreddits"] if str(item).strip()]
+    config["keywords"] = [str(item).strip() for item in config["keywords"] if str(item).strip()]
     if not config["subreddits"] or not config["keywords"]:
         raise ValueError("At least one subreddit and one keyword are required")
+    limit = int(config.get("limit_per_subreddit", 50))
+    if not 1 <= limit <= 100:
+        raise ValueError("limit_per_subreddit must be between 1 and 100")
+    config["limit_per_subreddit"] = limit
     return config
 
 
@@ -68,10 +76,17 @@ def make_match(post, keywords: Iterable[str]) -> Match | None:
 def read_seen(path: Path) -> set[str]:
     if not path.exists():
         return set()
-    return set(json.loads(path.read_text(encoding="utf-8")))
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        raise ValueError(f"Could not read state file {path}: {exc}") from exc
+    if not isinstance(data, list):
+        raise ValueError(f"State file {path} must contain a JSON list")
+    return {str(item) for item in data}
 
 
 def write_seen(path: Path, seen: set[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(sorted(seen), indent=2), encoding="utf-8")
 
 

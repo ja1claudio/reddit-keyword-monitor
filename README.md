@@ -4,6 +4,14 @@ A small, production-minded Python automation that monitors selected subreddits,
 matches configurable keywords, and exports new discussions to CSV or Google
 Sheets.
 
+## Windows desktop edition
+
+The project now includes a one-click Windows edition. It opens a private local
+interface in the default browser, so buyers do not need to edit JSON files or
+use a terminal. Build it with `powershell -ExecutionPolicy Bypass -File
+build_windows.ps1` and distribute the generated `dist/RedditKeywordMonitor`
+folder together with `QUICKSTART.md`.
+
 ## Features
 
 - Uses the official Reddit API through PRAW.
@@ -12,6 +20,7 @@ Sheets.
 - Exports to CSV without any cloud credentials.
 - Optionally appends rows to Google Sheets.
 - Includes structured logging, tests, and a dry-run mode.
+- Includes a local browser interface and Windows packaging script.
 
 ## Setup
 

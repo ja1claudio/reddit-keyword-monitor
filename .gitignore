@@ -1,5 +1,11 @@
 .env
 .venv/
+user_config.json
+data/
+build/
+dist/
+*.spec
+.venv/
 __pycache__/
 .pytest_cache/
 *.pyc
